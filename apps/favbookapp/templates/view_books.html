@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>Welcome! {{request.session.user_name}} 
+        <a href="#" class="btn btn-primary active text-end">Log Out</a>
+        <hr />
+        <div class="col">
+          <h1>{{book.title}}</h1>
+          <h6>Added by: {{book.uploaded_by.name}} {{book.uploaded_by.last_name}}</h6>
+          <h6>Added on: {{book.created_at}}</h6>
+          <h6>Last updated on: {{book.updated_at}}</h6>
+          <h6>Description: {{book.desc}}</h6>
+        </div>
+        <div class="col">
+            <h2>Users who like this book</h2>
+            {% for user in users %}
+          <div>
+            <p>{{users.name}} {{users.last_name}}</p>
+            <div>
+              {% if uploaded_by in book.users_who_like%}
+            <form action="/unlike/{{book.id}}" method="post">
+            {% csrf_token %}
+            <button type="submit" name="book_id" value="{{book.id}}">Unlike</button>
+            </form>
+            {% else %}
+            <form action="/like/{{book.id}}" method="post">
+              {% csrf_token %}
+              <button type="submit" name="book_id" class="btn btn-primary btn-sm" value="{{book.id}}">Like</button>
+              </form>
+            {% endif %}
+            </div>
+
+          </div>
+          {% endfor %}
+            
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
